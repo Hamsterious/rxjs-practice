@@ -1,5 +1,5 @@
 // Shows how static programming would add the numbers together below.
-let sourceStatic = ['1','1','foo','2','2','3','5','bar','8','13'];
+let sourceStatic = ['1','1','foo','2','3','5','bar','8','13'];
 
 let resultStatic = sourceStatic
             .map(x => parseInt(x)) // Parse each string to a number
