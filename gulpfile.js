@@ -36,7 +36,7 @@ gulp.task("js", function() {
             packageCache: {}
         })
         .plugin(tsify)
-        .bundle()
+        .bundle().on('error', console.error.bind(console))
         .pipe(source('bundle.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
