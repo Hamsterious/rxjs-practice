@@ -8,7 +8,7 @@ var buffer = require('vinyl-buffer');
 var browserSync = require('browser-sync').create();
 
 var paths = {
-    pages: ['src/*.html']
+    pages: ['src/**/*.html']
 };
 
 // use default task to launch Browsersync and watch JS files
