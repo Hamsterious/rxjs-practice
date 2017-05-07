@@ -1,10 +1,9 @@
-// Shows how static programming would add the numbers together below.
-let sourceStatic = ['1','1','foo','2','3','5','bar','8','13'];
+// Static source
+let addNumbersStaticSource = ['1','1','foo','2','3','5','bar','8','13']; 
 
-let resultStatic = sourceStatic
+let addNumbersStaticResult = addNumbersStaticSource
             .map(x => parseInt(x)) // Parse each string to a number
             .filter(x => !isNaN(x)) // Filter away items we couldn't parse
             .reduce((x,y) => x + y); // Add numbers together.
 
-console.log("static output")
-console.log(resultStatic);
+document.getElementById('add-number-static').innerHTML = addNumbersStaticResult.toString();
