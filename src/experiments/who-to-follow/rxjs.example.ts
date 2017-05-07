@@ -29,13 +29,17 @@ requestStream.subscribe(x => {
 });
 
 // RESPONSE
-let responseStream = Rx.Observable.fromPromise(GetGitUsersAsJson);
+let responseStream = Rx.Observable.fromPromise(GetGitUsersAsJson); // Creates a stream from the promise resolved value. In this case, this results in a stream with one event. The value emitted is json object with the users.
+
 responseStream.subscribe(x => {
     console.log("Result from responseStream: ");
-    for (let key in x) {
-        if (x.hasOwnProperty(key)) {
-            let val = x[key];
-            console.log(val.id);
+    for (let index in x) {
+        if (x.hasOwnProperty(index)) {
+            let user = x[index];
+            console.log(user);
+            var e = document.createElement('div');
+            e.innerHTML = `<img style="height:60px;"src="${user.avatar_url}" />`;
+            document.getElementById('who-to-follow-result').appendChild(e.firstChild);
         }
     }
 });
