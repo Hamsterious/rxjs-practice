@@ -6,4 +6,6 @@ let addNumbersStaticResult = addNumbersStaticSource
             .filter(x => !isNaN(x)) // Filter away items we couldn't parse
             .reduce((x,y) => x + y); // Add numbers together.
 
-document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
+try {
+    document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
+} catch(err) {}

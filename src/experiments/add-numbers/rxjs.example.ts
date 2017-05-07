@@ -13,6 +13,8 @@ let addNumbersresultStream =
             .reduce((x,y) => x + y); // Add numbers together.
 
 // Subscribe to the result stream, and for each event, attach the result to the dom.
-addNumbersresultStream.subscribe(x => { 
-    document.getElementById('add-numbers-rxjs').innerHTML = x.toString();
+addNumbersresultStream.subscribe(x => {
+    try {
+        document.getElementById('add-numbers-rxjs').innerHTML = x.toString();
+    } catch(err) {}
 });
