@@ -31,15 +31,12 @@ let renderGitUsers = (x: {}, usersToList:number = 3) => {
         if (x.hasOwnProperty(index)) {
             
             let user = x[index];
-            console.log(user);
 
             let e = document.createElement('div');
             e.innerHTML = 
             `<div style="margin-bottom:50px;">
-                <h2><a href="${user.html_url}">${user.login}</a></h2>
+                <h3><a href="${user.html_url}">${user.login}</a></h3>
                 <img style="height:100px;"src="${user.avatar_url}" />
-                <button class="refresh-user">✔ - follow</button>
-                <button class="refresh-user">✘ - nope</button>
             </div>`;
         
             document.getElementById('who-to-follow-result').appendChild(e.firstChild);
