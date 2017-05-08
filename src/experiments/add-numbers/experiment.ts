@@ -1,3 +1,20 @@
+  //////////////////////
+ /// STATIC EXAMPLE ///
+//////////////////////
+let addNumbersStaticSource = ['1','1','foo','2','3','5','bar','8','13']; 
+
+let addNumbersStaticResult = addNumbersStaticSource
+            .map(x => parseInt(x)) // Parse each string to a number
+            .filter(x => !isNaN(x)) // Filter away items we couldn't parse
+            .reduce((x,y) => x + y); // Add numbers together.
+
+try {
+    document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
+} catch(err) {}
+
+  ////////////////////
+ /// RXJS EXAMPLE ///
+////////////////////
 import * as Rx from 'rxjs/Rx'; // Import RxJs
 
 let addNumbersSourceStream = 
