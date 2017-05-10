@@ -26,18 +26,17 @@ let responseStream = requestStream.flatMap(x => {
 });
 
 let createSuggestionStream = (refreshStream) => {
-    return refreshStream.startWith('startup click')
-        .combineLatest(responseStream,             
-            function(click, listUsers) {
-                return listUsers[Math.floor(Math.random()*listUsers.length)];
-            }
-        )
-        .merge(
-            mainRefreshStream.map(function(){ 
-                return null;
-            })
-        )
-        .startWith(null);
+    return refreshStream
+        // Force the refresh stream to refresh on startup
+        .startWith('')
+        // Creates a stream from the refresh and response stream.
+        // The callback function takes the last event from each stream, and runs a function on them. 
+        // The result is a stream of events with the value returned from the function.
+        .combineLatest(responseStream, (refreshEvent, responseEvent) => {
+                return responseEvent[Math.floor(Math.random() * responseEvent.length)];
+        })
+        // By mapping the events to null, we avoid rendering "undefined" in the view
+        .merge(mainRefreshStream.map(() => { return null; }));
 }
 
 var suggestionStream1 = createSuggestionStream(refreshUserClickStream1);
