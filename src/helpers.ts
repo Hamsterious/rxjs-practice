@@ -8,13 +8,15 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 resolve(JSON.parse(this.responseText));
+            } else if (this.status == 403) {
+                console.log("Git API quota met. Please wait a bit before making requests again.");
             }
         };
 
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
     });
-   
+
     return thePromise;
 };
 

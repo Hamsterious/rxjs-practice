@@ -2,10 +2,11 @@ import * as Rx from 'rxjs/Rx'; // Import RxJs
 import { tryCatchLogErrors } from '../../helpers';
 
 tryCatchLogErrors("Add-numbers errors: \n", () => {
-    
-      //////////////////////
-     /// STATIC EXAMPLE ///
-    //////////////////////
+    addNumbersStatic();
+    addNumbersRxJs();
+});
+
+function addNumbersStatic(){
     let addNumbersStaticSource = ['1','1','foo','2','3','5','bar','8','13']; 
 
     let addNumbersStaticResult = addNumbersStaticSource
@@ -13,13 +14,10 @@ tryCatchLogErrors("Add-numbers errors: \n", () => {
                 .filter(x => !isNaN(x)) // Filter away items we couldn't parse
                 .reduce((x,y) => x + y); // Add numbers together.
 
-    try {
-        document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
-    } catch(err) {}
+    document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
+}
 
-    ////////////////////
-    /// RXJS EXAMPLE ///
-    ////////////////////
+function addNumbersRxJs(){
     let addNumbersSourceStream = 
                     Rx.Observable // Create a stream. Stream = Observable.
                     .interval(500) // Emit a number++ every half second
@@ -38,5 +36,4 @@ tryCatchLogErrors("Add-numbers errors: \n", () => {
             document.getElementById('add-numbers-rxjs').innerHTML = x.toString();
         } catch(err) {}
     });
-});
-
+}
