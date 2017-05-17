@@ -20,6 +20,30 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     return thePromise;
 };
 
+// R
+let renderSuggestedGithubUser = (suggestedUser, selector) => {
+        
+            let suggestionNode = document.querySelector(selector);
+            suggestionNode.innerHTML = "";
+            
+            if(suggestedUser === null) {
+                suggestionNode.style.visibility = 'hidden';
+            }
+            else
+            {
+                suggestionNode.style.visibility = 'visible';
+                let e = document.createElement('div');
+                e.innerHTML = 
+                `<div>
+                    <img style="height:100px;"src="${suggestedUser.avatar_url}" />
+                    <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>
+                </div>`;
+
+                suggestionNode.appendChild(e.firstChild);
+            }
+    
+    }
+
 // Runs code in a try catch blog, and logs the message, and errors.
 // Ensures the different experiments don't break each other.
 function tryCatchLogErrors(message, action) {
@@ -32,5 +56,6 @@ function tryCatchLogErrors(message, action) {
 
 export { 
     getGitUsersAsJsonPromise,
-    tryCatchLogErrors
+    tryCatchLogErrors,
+    renderSuggestedGithubUser
 };

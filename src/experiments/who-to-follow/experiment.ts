@@ -1,5 +1,8 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { getGitUsersAsJsonPromise, tryCatchLogErrors } from '../../helpers';
+import { 
+    getGitUsersAsJsonPromise, 
+    tryCatchLogErrors, 
+    renderSuggestedGithubUser } from '../../helpers';
 
 tryCatchLogErrors("Who-to-follow errors: \n", () => {
 
@@ -41,43 +44,22 @@ tryCatchLogErrors("Who-to-follow errors: \n", () => {
             .merge(mainRefreshStream.map(() => { return null; }));
     }
 
+    // Create a stream of suggested users.
     var suggestionStream1 = createSuggestionStream(refreshUserClickStream1);
     var suggestionStream2 = createSuggestionStream(refreshUserClickStream2);
     var suggestionStream3 = createSuggestionStream(refreshUserClickStream3);
 
-    let renderSuggestion = (suggestedUser, selector) => {
-        
-            let suggestionNode = document.querySelector(selector);
-            suggestionNode.innerHTML = "";
-            
-            if(suggestedUser === null) {
-                suggestionNode.style.visibility = 'hidden';
-            }
-            else
-            {
-                suggestionNode.style.visibility = 'visible';
-                let e = document.createElement('div');
-                e.innerHTML = 
-                `<div>
-                    <img style="height:100px;"src="${suggestedUser.avatar_url}" />
-                    <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>
-                </div>`;
-
-                suggestionNode.appendChild(e.firstChild);
-            }
-    
-    }
-
+    // Render the last suggested user.
     suggestionStream1.subscribe((suggestedUser) => {
-        renderSuggestion(suggestedUser, '.suggestion1');
+        renderSuggestedGithubUser(suggestedUser, '.suggestion1');
     });
 
     suggestionStream2.subscribe((suggestedUser) => {
-        renderSuggestion(suggestedUser, '.suggestion2');
+        renderSuggestedGithubUser(suggestedUser, '.suggestion2');
     });
 
     suggestionStream3.subscribe((suggestedUser) => {
-        renderSuggestion(suggestedUser, '.suggestion3');
+        renderSuggestedGithubUser(suggestedUser, '.suggestion3');
     });
     
 });
