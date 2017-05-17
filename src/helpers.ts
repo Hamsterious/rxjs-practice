@@ -20,7 +20,6 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     return thePromise;
 };
 
-// R
 let renderSuggestedGithubUser = (suggestedUser, selector) => {
         
             let suggestionNode = document.querySelector(selector);
