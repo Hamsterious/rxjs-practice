@@ -1,7 +1,7 @@
 // A function returning a promise of a json object
 // The promise makes an asynchronous XMLHttpRequest,
 // The result from the request is parsed into a json object, and then resolved.
-let getGitUsersAsJsonPromise = function(url: string): Promise<{}> {
+function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     let thePromise = new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
 
@@ -18,4 +18,17 @@ let getGitUsersAsJsonPromise = function(url: string): Promise<{}> {
     return thePromise;
 };
 
-export { getGitUsersAsJsonPromise };
+// Runs code in a try catch blog, and logs the message, and errors.
+// Ensures the different experiments don't break each other.
+function tryCatchLogErrors(message, action) {
+    try {
+        action();
+    } catch (e) { 
+        console.log(message, e.message)
+    }
+}
+
+export { 
+    getGitUsersAsJsonPromise,
+    tryCatchLogErrors
+};
