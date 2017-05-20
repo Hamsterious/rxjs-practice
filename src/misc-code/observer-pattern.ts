@@ -16,20 +16,20 @@ class Producer {
             listener.update(message);
         });
     }
-};
+}
 
 // Listeners. They must have a update method to work, much like INotifyPropertyChanged in the C# Observer pattern.
 class SimpleLogListener {
     public update(message: string): void {
         console.log('simpleLogListener: ', message);
     }
-};
+}
 
 class LogAsCapitalListener {
     public update(message: string): void {
         console.log('logAsCapitalListener: ', message.toUpperCase());
     }
-};
+}
 
 // Create producer and listeners.
 let producer = new Producer();
