@@ -20,31 +20,30 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     return thePromise;
 };
 
+// Creates an html node with data from the suggested git user, and appends the result to the DOM.
 let renderSuggestedGithubUser = (suggestedUser, selector) => {
-        
-            let suggestionNode = document.querySelector(selector);
-            suggestionNode.innerHTML = "";
-            
-            if(suggestedUser === null) {
-                suggestionNode.style.visibility = 'hidden';
-            }
-            else
-            {
-                suggestionNode.style.visibility = 'visible';
-                let e = document.createElement('div');
-                e.innerHTML = 
-                `<div>
-                    <img style="height:100px;"src="${suggestedUser.avatar_url}" />
-                    <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>
-                </div>`;
-
-                suggestionNode.appendChild(e.firstChild);
-            }
+    let suggestionNode = document.querySelector(selector);
+    suggestionNode.innerHTML = "";
     
+    if(suggestedUser === null) {
+        suggestionNode.style.visibility = 'hidden';
     }
+    else
+    {
+        suggestionNode.style.visibility = 'visible';
+        let e = document.createElement('div');
+        e.innerHTML = 
+        `<div>
+            <img style="height:100px;"src="${suggestedUser.avatar_url}" />
+            <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>
+        </div>`;
 
-// Runs code in a try catch blog, and logs the message, and errors.
-// Ensures the different experiments don't break each other.
+        suggestionNode.appendChild(e.firstChild);
+    }
+}
+
+// Runs code in a try catch blog, and logs the custom message + the error message.
+// Made to ensure different experiments don't break each other.
 function tryCatchLogErrors(message, action) {
     try {
         action();
@@ -53,6 +52,7 @@ function tryCatchLogErrors(message, action) {
     }
 }
 
+// Export helper functions, so they can be imported elsewhere.
 export { 
     getGitUsersAsJsonPromise,
     tryCatchLogErrors,
