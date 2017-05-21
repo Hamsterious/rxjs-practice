@@ -28,7 +28,7 @@ tryCatchLogErrors("Who-to-follow errors: \n", () => {
     // A stream of json responses from the requested git url.
     let responseStream = requestStream.flatMap(x => {
         return Rx.Observable.fromPromise(getGitUsersAsJsonPromise(x));
-    });
+    }).share();
 
     let createSuggestionStream = (refreshStream) => {
         return refreshStream
