@@ -34,11 +34,7 @@ function renderSuggestedGithubUser(suggestedUser, selector) {
     }
 }
 
-let renderElement = (
-        renderElementSelector: string, 
-        getNthParent,
-        content: string
-    ) => {
+let renderElement = (renderElementSelector: string, getNthParent, content: string ) => {
 
     // Target element to render input inside
     let targetElement;
