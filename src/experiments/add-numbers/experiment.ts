@@ -1,5 +1,5 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { swallowErrors } from '../../helpers';
+import { swallowErrors, renderElement } from '../../helpers';
 
 swallowErrors("Add-numbers errors: \n", () => {
     addNumbersStatic();
@@ -17,8 +17,7 @@ function addNumbersStatic(){
                 // Add numbers together.
                 .reduce((x,y) => x + y); 
     
-    // Append result to DOM
-    document.getElementById('add-numbers-static').innerHTML = addNumbersStaticResult.toString();
+    renderElement("#add-numbers-static", 0, addNumbersStaticResult.toString());
 }
 
 function addNumbersRxJs(){
@@ -45,6 +44,6 @@ function addNumbersRxJs(){
 
     // Subscribe to the result stream, and for each event, attach the result to the dom.
     addNumbersresultStream.subscribe(x => {
-        document.getElementById('add-numbers-rxjs').innerHTML = x.toString();
+        renderElement('#add-numbers-rxjs', 0, x.toString());
     });
 }

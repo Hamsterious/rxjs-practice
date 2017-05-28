@@ -1,5 +1,5 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { swallowErrors, renderClick } from '../../helpers';
+import { swallowErrors, renderElement } from '../../helpers';
 
 swallowErrors("logging clicks errors: \n", () => {
 
@@ -13,5 +13,9 @@ swallowErrors("logging clicks errors: \n", () => {
         // Take no more than 10 clicks
         .take(10)
         // Show the x and y axis of the point clicked.
-        .subscribe(x => renderClick(x));
+        .subscribe(x => renderElement(".clicks", 0, `
+            <p>
+                <strong>X: ${x.clientX}, Y: ${x.clientY}<strong/>
+            <p/>
+        `));
 });

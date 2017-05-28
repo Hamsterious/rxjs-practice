@@ -1,6 +1,3 @@
-// A function returning a promise of a json object
-// The promise makes an asynchronous XMLHttpRequest,
-// The result from the request is parsed into a json object, and then resolved.
 function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     let thePromise = new Promise((resolve, reject) => {
         let xmlhttp = new XMLHttpRequest();
@@ -20,45 +17,69 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     return thePromise;
 };
 
-// Creates an html node with data from the suggested git user, and appends the result to the DOM.
-let renderSuggestedGithubUser = (suggestedUser, selector) => {
-    let suggestionNode = document.querySelector(selector);
-    suggestionNode.innerHTML = "";
+function renderSuggestedGithubUser(suggestedUser, selector) {
+    toggleVisibility(selector, "");
     
     if(suggestedUser === null) {
-        suggestionNode.style.visibility = 'hidden';
+        toggleVisibility(selector, "none");
     }
     else
     {
-        suggestionNode.style.visibility = 'visible';
-        let e = document.createElement('div');
-        e.innerHTML = 
-        `<div>
-            <img style="height:100px;"src="${suggestedUser.avatar_url}" />
-            <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>
-        </div>`;
+        toggleVisibility(selector, "");
+        let content = 
+        `<img style="height:100px;"src="${suggestedUser.avatar_url}" />
+         <a href="${suggestedUser.html_url}">${suggestedUser.login}</a>`;
 
-        suggestionNode.appendChild(e.firstChild);
+       renderElement(selector, 0, content);
     }
 }
 
-// Render clicks
-function renderClick(click: any): void {
-    try {
-        let suggestionNode = document.querySelector("div.clicks");
-   
-        let e = document.createElement('div');
-        e.innerHTML = 
-        `<div>
-            <p><strong>X: ${click.clientX}, Y: ${click.clientY}<strong/><p/>
-        </div>`;
+let renderElement = (
+        renderElementSelector: string, 
+        getNthParent,
+        content: string
+    ) => {
 
-        suggestionNode.appendChild(e.firstChild);
-    } catch (e) {}
+    // Target element to render input inside
+    let targetElement;
+    if(renderElementSelector.charAt(0) == '#') {
+        renderElementSelector = renderElementSelector.replace('#','');
+        targetElement = document.getElementById(renderElementSelector);
+    } else {
+        targetElement = document.querySelector(renderElementSelector);
+    }
+
+    // Get number of parents specified
+    if(getNthParent != 0) {
+        while(getNthParent != 0){
+            let parentTarget = targetElement;
+            targetElement = parentTarget.parentElement;
+            getNthParent--;
+        }
+    }
+
+    // Holder element for content
+    let e = document.createElement('div');
+
+    // Content for the element
+    e.innerHTML = "<div>" + content + "</div>";
+
+    // Render element
+    targetElement.appendChild(e.firstChild);
 }
 
-// Runs code in a try catch blog, and logs the custom message + the error message.
-// Made to ensure different experiments don't break each other.
+let toggleVisibility = (selector:string, visibility: string) =>  {
+    let targetElement;
+    if(selector.charAt(0) == '#') {
+        selector = selector.replace('#','');
+        targetElement = document.getElementById(selector);
+    } else {
+        targetElement = document.querySelector(selector);
+    }
+
+    targetElement.style.display = visibility;
+}
+
 function swallowErrors(message, action) {
     try {
         action();
@@ -66,10 +87,10 @@ function swallowErrors(message, action) {
     }
 }
 
-// Export helper functions, so they can be imported elsewhere.
 export { 
     getGitUsersAsJsonPromise,
     swallowErrors,
     renderSuggestedGithubUser,
-    renderClick
+    renderElement,
+    toggleVisibility
 };
