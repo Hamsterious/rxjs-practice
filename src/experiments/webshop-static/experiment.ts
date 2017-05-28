@@ -190,7 +190,7 @@ class Webshop {
 
         if(this.cart.products.length == 0){
             e.innerHTML = `<div>
-                    <p id="back-to-products" style="color:blue;cursor:pointer;"><img src="https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/38-128.png"></img> Back to products</p>
+                    <p id="back-to-products" style="color:blue;cursor:pointer;">Back to products</p>
                     <h2>Your cart</h2>
                     <p>Nothing in your cart.</p>
                 </div>`;
@@ -207,7 +207,7 @@ class Webshop {
             }
 
             e.innerHTML = `<div>
-                <p id="back-to-products" style="color:blue;cursor:pointer;"><img src="https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/38-128.png"></img> Back to products</p>
+                <p id="back-to-products" style="color:blue;cursor:pointer;">Back to products</p>
                 <h2>Your cart</h2>
                 ${ content }
               <div/>`
