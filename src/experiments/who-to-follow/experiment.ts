@@ -1,10 +1,10 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
 import { 
     getGitUsersAsJsonPromise, 
-    tryCatchLogErrors, 
+    swallowErrors, 
     renderSuggestedGithubUser } from '../../helpers';
 
-tryCatchLogErrors("Who-to-follow errors: \n", () => {
+swallowErrors("Who-to-follow errors: \n", () => {
 
     // Get DOM elements we want to create streams from
     let refreshButton = document.querySelector('.refresh');

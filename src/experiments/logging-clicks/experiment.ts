@@ -1,7 +1,7 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { tryCatchLogErrors, renderClick } from '../../helpers';
+import { swallowErrors, renderClick } from '../../helpers';
 
-tryCatchLogErrors("logging clicks errors: \n", () => {
+swallowErrors("logging clicks errors: \n", () => {
 
     Rx.Observable
         // Whenever the document is clicked

@@ -1,7 +1,7 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { tryCatchLogErrors } from '../../helpers';
+import { swallowErrors } from '../../helpers';
 
-tryCatchLogErrors("Add-numbers errors: \n", () => {
+swallowErrors("Add-numbers errors: \n", () => {
     addNumbersStatic();
     addNumbersRxJs();
 });

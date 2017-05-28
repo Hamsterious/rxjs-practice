@@ -59,18 +59,17 @@ function renderClick(click: any): void {
 
 // Runs code in a try catch blog, and logs the custom message + the error message.
 // Made to ensure different experiments don't break each other.
-function tryCatchLogErrors(message, action) {
+function swallowErrors(message, action) {
     try {
         action();
     } catch (e) { 
-        console.log(message, e.message)
     }
 }
 
 // Export helper functions, so they can be imported elsewhere.
 export { 
     getGitUsersAsJsonPromise,
-    tryCatchLogErrors,
+    swallowErrors,
     renderSuggestedGithubUser,
     renderClick
 };

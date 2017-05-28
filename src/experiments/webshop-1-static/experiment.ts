@@ -1,8 +1,5 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { tryCatchLogErrors } from '../../helpers';
-
-// Allows window to work in typescript.
-declare let window: any;
+import { swallowErrors } from '../../helpers';
 
 class Product {
 
@@ -38,20 +35,22 @@ class Cart {
 class Webshop {
 
     // Properties
-    public products: Product[] = this.getProducts();
+    public products: Product[];
     public cart: Cart;
 
     // Constructor
     constructor() {
+        this.products = this.getProducts();
         this.cart = new Cart();
         this.renderProducts(this.products);
-        this.AttachEventToButtons(this.buyProduct);
+        this.AttachEventToButtons(this.addToCard);
     }
 
     // Methods
-    private buyProduct = (productId: number) => {
+    private addToCard = (productId: number): void => {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
+        this.notifyProductAddedToCart(productId);
     }
 
     private getProducts(): Product[] {
@@ -101,6 +100,19 @@ class Webshop {
         ];
     }
 
+    private notifyProductAddedToCart(productId: number): void{
+        let targetElement: any = document.getElementById(productId.toString()).parentNode;
+
+        let e = document.createElement('div');
+            e.innerHTML =  `<div><p id="bought" style="color:green;margin-top:1rem;">Tiløjet til kurven!</p></div>`;
+
+            targetElement.appendChild(e.firstChild);
+
+        setTimeout(() => {
+            document.getElementById("bought").remove();
+        }, 1000);
+    }
+
     private renderProducts(products: Product[]): void {
         let targetElement = document.querySelector("div.products");
         targetElement.innerHTML = "";
@@ -114,7 +126,7 @@ class Webshop {
                 <div class="card-block">
                     <h4 class="card-title">${ product.title }</h4>
                     <p class="card-text">${ product.description }</p>
-                    <p><strong>Price:<strong/> ${ product.price } kr<p/>
+                    <p><strong>Price:<strong/>${ product.price } kr<p/>
                     <button id="${ product.id }" 
                     class="btn btn-primary">Buy</a>
                 </div>
@@ -134,9 +146,12 @@ class Webshop {
             };
         }​
     }
+
 }
 
-tryCatchLogErrors("Errors from webshop-1-static", () => {
-    let webshop = new Webshop();
+swallowErrors("Errors from webshop-1-static", () => {
 });
+
+let webshop = new Webshop();
+
 
