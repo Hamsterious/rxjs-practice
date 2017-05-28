@@ -22,14 +22,25 @@
             height: 10rem;
         }
         
-        #search-area {
+        #action-area {
             float: right;
             margin-top: 3rem;
         }
         
-        #search-area img {
+        #action-area img,
+        #back-to-products img {
             width: 25px;
             height: 25px;
+        }
+        
+        #added-to-cart-notification {
+            position: absolute;
+            bottom: 45px;
+            right: 34px;
+        }
+        
+        #show-cart {
+            cursor: pointer;
         }
     </style>
 
@@ -41,14 +52,34 @@
 
     <!-- Container -->
     <div class="container">
+
+        <!-- Title -->
         <h1>Static webshop</h1>
-        <div id="search-area">
-            <i><img src="https://cdn0.iconfinder.com/data/icons/30-hardware-line-icons/64/Search-128.png"></img></i> <input type="text" id="search-field" placeholder="Search for products...">
+
+        <!-- Action area -->
+        <div id="action-area">
+
+            <!-- Go to cart -->
+            <span id="show-cart">
+                <i>
+                    <img src="https://cdn0.iconfinder.com/data/icons/30-hardware-line-icons/64/Shopping-cart-128.png"></img>
+                    Go to cart
+                </i>
+            </span>
+
+            <!-- Search -->
+            <i>
+                <img src="https://cdn0.iconfinder.com/data/icons/30-hardware-line-icons/64/Search-128.png"></img>
+            </i>
+            <input type="text" id="search-field" placeholder="Search for products...">
         </div>
 
 
         <!-- Products -->
         <div class="products card-columns"></div>
+
+        <!-- Cart -->
+        <div class="cart"></div>
     </div>
 
     <!-- Bootstrap Scripts -->

@@ -4,7 +4,7 @@ import './experiments/who-to-follow/experiment';
 import './experiments/logging-clicks/experiment';
 
 // Webshop experiments
-import './experiments/webshop-1-static/experiment';
+import './experiments/webshop-static/experiment';
 
 // Javascript patterns
 import './misc-code/observer-pattern';

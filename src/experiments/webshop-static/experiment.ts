@@ -41,12 +41,12 @@ class Webshop {
     constructor() {
         this.products = this.getProducts();
         this.cart = new Cart();
-        this.renderProducts(this.products);
+        this.showProducts(this.products);
         this.attachEventToSearchField(this.searchProducts);
-        this.attachEventToButtons(this.addToCart);
+        this.attachEventToCartButton(this.showCartArea);
     }
 
-    // Methods
+    // Webshop Methods
     private addToCart = (productId: number): void => {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
@@ -118,16 +118,17 @@ class Webshop {
         let targetElement: any = document.getElementById(productId.toString()).parentElement.parentElement;
 
         let e = document.createElement('div');
-            e.innerHTML =  `<div><p id="bought" style="color:green;margin-top:1rem;">Tiløjet til kurven!</p></div>`;
+            e.innerHTML =  `<div><span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span></div>`;
 
             targetElement.appendChild(e.firstChild);
 
         setTimeout(() => {
-            document.getElementById("bought").remove();
+            document.getElementById("added-to-cart-notification").remove();
         }, 500);
     }
 
-    private renderProducts(products: Product[]): void {
+    // Show methods
+    private showProducts(products: Product[]): void {
         let targetElement = document.querySelector("div.products");
         targetElement.innerHTML = "";
 
@@ -148,19 +149,78 @@ class Webshop {
 
             targetElement.appendChild(e.firstChild);
         }
-    }
 
-    private attachEventToButtons (event: any): void {
+        // Attach button events.
         let buttons = document.getElementsByTagName("button");
         let buttonsCount = buttons.length;
 
         for (let i = 0; i < buttonsCount; i += 1) {
             buttons[i].onclick = () => {
-                event(buttons[i].id);
+                this.addToCart(parseInt(buttons[i].id));
             }
         }​
     }
 
+    private showProductArea = (): void => {
+        let cartArea: any = document.querySelector("div.cart");
+        cartArea.style.display = "none";
+
+        // Show products and action area
+        let productArea: any = document.querySelector(".products");
+        let actionArea: any = document.querySelector("#action-area");
+        productArea.style.display = "";
+        actionArea.style.display = "";
+    }
+
+    private showCartArea = (): void => {
+        // Hide products and action area
+        let productArea: any = document.querySelector(".products");
+        let actionArea: any = document.querySelector("#action-area");
+        productArea.style.display = "none";
+        actionArea.style.display = "none";
+
+        // Show cart area
+        let cartArea: any = document.querySelector("div.cart");
+        cartArea.style.display = "";
+
+        // Show all products in cart
+        let targetElement = document.querySelector("div.cart");
+        targetElement.innerHTML = "";
+        let e = document.createElement('div');
+
+        if(this.cart.products.length == 0){
+            e.innerHTML = `<div>
+                    <p id="back-to-products" style="color:blue;cursor:pointer;"><img src="https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/38-128.png"></img> Back to products</p>
+                    <h2>Your cart</h2>
+                    <p>Nothing in your cart.</p>
+                </div>`;
+
+            targetElement.appendChild(e.firstChild);
+        } else {
+            let content = "";
+            for(let product of this.cart.products){
+                content += `<div>
+                    <ul>
+                        <li>${ product.title }</li>
+                    </ul>
+                </div>`;
+            }
+
+            e.innerHTML = `<div>
+                <p id="back-to-products" style="color:blue;cursor:pointer;"><img src="https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/38-128.png"></img> Back to products</p>
+                <h2>Your cart</h2>
+                ${ content }
+              <div/>`
+            targetElement.appendChild(e.firstChild);
+
+        }
+        let backToProducts = document.getElementById("back-to-products");
+        backToProducts.onclick = () => {
+            this.showProductArea();
+        }
+    }
+
+    // Event attacher methods
     private attachEventToSearchField(event: any): void {
         let searchField = document.getElementById("search-field");
         searchField.onkeyup = () => {
@@ -168,6 +228,12 @@ class Webshop {
         }
     }
 
+     private attachEventToCartButton(event: any): void {
+        let cartLink = document.getElementById("show-cart");
+        cartLink.onclick = (e) => {
+            event();
+        }
+    }
 }
 
 let webshop = new Webshop();
