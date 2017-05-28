@@ -80,6 +80,26 @@ let toggleVisibility = (selector:string, visibility: string) =>  {
     targetElement.style.display = visibility;
 }
 
+let attachEvent = (selector: string, event: string, callback: () => void) => {
+    let targetElement;
+    if(selector.charAt(0) == '#') {
+        selector = selector.replace('#','');
+        targetElement = document.getElementById(selector);
+    } else {
+        targetElement = document.querySelector(selector);
+    }
+
+    if(event == "click"){
+        targetElement.onclick = () => {
+            callback();
+        }
+    } else if (event == "keyup"){
+        targetElement.onkeyup = () => {
+            callback();
+        }
+    }
+}
+
 function swallowErrors(message, action) {
     try {
         action();
@@ -92,5 +112,6 @@ export {
     swallowErrors,
     renderSuggestedGithubUser,
     renderElement,
-    toggleVisibility
+    toggleVisibility,
+    attachEvent
 };

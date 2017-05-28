@@ -1,4 +1,4 @@
-import { swallowErrors, renderElement, toggleVisibility } from '../../helpers';
+import { swallowErrors, renderElement, toggleVisibility, attachEvent } from '../../helpers';
 import { Product, Cart } from './models';
 import { Products } from './products';
 
@@ -9,12 +9,12 @@ class Webshop {
     public cart: Cart;
 
     // Constructor
-    constructor() {
+    constructor() { 
         this.products = Products;
         this.cart = new Cart();
         this.showProducts(this.products);
-        this.attachEventToSearchField(this.searchProducts);
-        this.attachEventToCartButton(this.showCartArea);
+        attachEvent("#search-field", "keyup", this.searchProducts);
+        attachEvent("#show-cart", "click", this.showCartArea);
     }
 
     // Webshop Methods
@@ -25,6 +25,7 @@ class Webshop {
     }
 
     private searchProducts() {
+        console.log("he");
         let searchFieldValue: any = document.getElementById('search-field');
         let searchTerm = searchFieldValue.value.toUpperCase();
         let domProducts = document.querySelectorAll("h4");
@@ -70,7 +71,15 @@ class Webshop {
         }
         renderElement("div.products", 0, content);
 
-        this.attachAddCartEventToProductButtons();
+        // Attach events
+        let buttons = document.getElementsByTagName("button");
+        let buttonsCount = buttons.length;
+
+        for (let i = 0; i < buttonsCount; i += 1) {
+            buttons[i].onclick = () => {
+                this.addToCart(parseInt(buttons[i].id));
+            }
+        }​
     }
 
     private showProductArea = (): void => {
@@ -110,43 +119,7 @@ class Webshop {
 
         document.querySelector(".cart").innerHTML = "";
         renderElement("div.cart", 0, content);
-
-        this.attachEventToBackElement();
-    }
-
-
-
-    // Event attacher methods
-    private attachEventToBackElement(): void {
-        let backToProducts = document.getElementById("back-to-products");
-        backToProducts.onclick = () => {
-            this.showProductArea();
-        }
-    }
-
-    private attachAddCartEventToProductButtons(): void {
-        let buttons = document.getElementsByTagName("button");
-        let buttonsCount = buttons.length;
-
-        for (let i = 0; i < buttonsCount; i += 1) {
-            buttons[i].onclick = () => {
-                this.addToCart(parseInt(buttons[i].id));
-            }
-        }​
-    }
-
-    private attachEventToSearchField(event: any): void {
-        let searchField = document.getElementById("search-field");
-        searchField.onkeyup = () => {
-            event();
-        }
-    }
-
-    private attachEventToCartButton(event: any): void {
-        let cartLink = document.getElementById("show-cart");
-        cartLink.onclick = (e) => {
-            event();
-        }
+        attachEvent("#back-to-products", "click", this.showProductArea);
     }
 }
 
