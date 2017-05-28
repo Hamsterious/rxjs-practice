@@ -42,6 +42,19 @@ let renderSuggestedGithubUser = (suggestedUser, selector) => {
     }
 }
 
+// Render clicks
+function renderClick(click: any): void {
+    let suggestionNode = document.querySelector("div.clicks");
+   
+    let e = document.createElement('div');
+    e.innerHTML = 
+    `<div>
+        <p><strong>X: ${click.clientX}, Y: ${click.clientY}<strong/><p/>
+    </div>`;
+
+    suggestionNode.appendChild(e.firstChild);
+}
+
 // Runs code in a try catch blog, and logs the custom message + the error message.
 // Made to ensure different experiments don't break each other.
 function tryCatchLogErrors(message, action) {
@@ -56,5 +69,6 @@ function tryCatchLogErrors(message, action) {
 export { 
     getGitUsersAsJsonPromise,
     tryCatchLogErrors,
-    renderSuggestedGithubUser
+    renderSuggestedGithubUser,
+    renderClick
 };

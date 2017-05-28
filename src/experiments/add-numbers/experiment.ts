@@ -27,7 +27,7 @@ function addNumbersRxJs(){
                     // Create a stream. Stream = Observable.
                     Rx.Observable 
                     // Emit a number++ every half second
-                    .interval(500) 
+                    .interval(200) 
                     // Take nine of these numbers...
                     .take(9) 
                     // And map each number to a value in the array.

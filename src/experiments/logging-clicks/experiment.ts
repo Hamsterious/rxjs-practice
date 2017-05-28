@@ -1,5 +1,5 @@
 import * as Rx from 'rxjs/Rx'; // Import RxJs
-import { tryCatchLogErrors } from '../../helpers';
+import { tryCatchLogErrors, renderClick } from '../../helpers';
 
 tryCatchLogErrors("logging clicks errors: \n", () => {
 
@@ -12,9 +12,6 @@ tryCatchLogErrors("logging clicks errors: \n", () => {
         })
         // Take no more than 10 clicks
         .take(10)
-        // Log the x and y axis of the point clicked.
-        .subscribe(x => {
-            return console.log("X: " + x.clientX + ", Y: " + x.clientY);
-        });
-        
+        // Show the x and y axis of the point clicked.
+        .subscribe(x => renderClick(x));
 });

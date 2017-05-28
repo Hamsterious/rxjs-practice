@@ -8,22 +8,18 @@ class Product {
     ){}
 }
 
-
-
 tryCatchLogErrors("Errors from webshop-1-static", () => {
     
-    let products: Product[] = getProducts();
-    renderProducts(products);
+    renderProducts(getProducts());
 
 });
 
 function getProducts(): Product[] {
-        return [
-            new Product("Cookie", 0.5),
-            new Product("Ship", 30000)
-        ];
-    }
-
+    return [
+        new Product("Cookie", 0.5),
+        new Product("Ship", 30000)
+    ];
+}
 
 function renderProducts(products: Product[]): void {
     let suggestionNode = document.querySelector("div.products");
