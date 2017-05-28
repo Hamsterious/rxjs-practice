@@ -14,11 +14,22 @@
     <style>
         h1 {
             margin: 2.5rem 0;
+            display: inline-block;
         }
         
         img {
             width: 14.8rem;
             height: 10rem;
+        }
+        
+        #search-area {
+            float: right;
+            margin-top: 3rem;
+        }
+        
+        #search-area img {
+            width: 25px;
+            height: 25px;
         }
     </style>
 
@@ -31,6 +42,10 @@
     <!-- Container -->
     <div class="container">
         <h1>Static webshop</h1>
+        <div id="search-area">
+            <i><img src="https://cdn0.iconfinder.com/data/icons/30-hardware-line-icons/64/Search-128.png"></img></i> <input type="text" id="search-field" placeholder="Search for products...">
+        </div>
+
 
         <!-- Products -->
         <div class="products card-columns"></div>

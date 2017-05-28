@@ -1,4 +1,3 @@
-import * as Rx from 'rxjs/Rx'; // Import RxJs
 import { swallowErrors } from '../../helpers';
 
 class Product {
@@ -43,14 +42,29 @@ class Webshop {
         this.products = this.getProducts();
         this.cart = new Cart();
         this.renderProducts(this.products);
-        this.AttachEventToButtons(this.addToCard);
+        this.attachEventToSearchField(this.searchProducts);
+        this.attachEventToButtons(this.addToCart);
     }
 
     // Methods
-    private addToCard = (productId: number): void => {
+    private addToCart = (productId: number): void => {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
         this.notifyProductAddedToCart(productId);
+    }
+
+    private searchProducts() {
+        let searchFieldValue: any = document.getElementById('search-field');
+        let searchTerm = searchFieldValue.value.toUpperCase();
+        let domProducts = document.querySelectorAll("h4");
+
+        for (let i = 0; i < domProducts.length; i++) {
+            if (domProducts[i].innerHTML.toUpperCase().indexOf(searchTerm) > -1) {
+                domProducts[i].parentElement.parentElement.style.display = "";
+            } else {
+                domProducts[i].parentElement.parentElement.style.display = "none";
+            }
+        }
     }
 
     private getProducts(): Product[] {
@@ -101,7 +115,7 @@ class Webshop {
     }
 
     private notifyProductAddedToCart(productId: number): void{
-        let targetElement: any = document.getElementById(productId.toString()).parentNode;
+        let targetElement: any = document.getElementById(productId.toString()).parentElement.parentElement;
 
         let e = document.createElement('div');
             e.innerHTML =  `<div><p id="bought" style="color:green;margin-top:1rem;">Tiløjet til kurven!</p></div>`;
@@ -110,7 +124,7 @@ class Webshop {
 
         setTimeout(() => {
             document.getElementById("bought").remove();
-        }, 1000);
+        }, 500);
     }
 
     private renderProducts(products: Product[]): void {
@@ -121,12 +135,12 @@ class Webshop {
     
             let e = document.createElement('div');
             e.innerHTML = 
-            `<div class="card" style="width: 15rem;">
+            `<div class="card product" style="width: 15rem;">
                 <img class="card-img-top" src="${ product.image }" alt="Card image cap">
                 <div class="card-block">
                     <h4 class="card-title">${ product.title }</h4>
                     <p class="card-text">${ product.description }</p>
-                    <p><strong>Price:<strong/>${ product.price } kr<p/>
+                    <p><strong>Price: </strong>${ product.price }kr<p/>
                     <button id="${ product.id }" 
                     class="btn btn-primary">Buy</a>
                 </div>
@@ -136,22 +150,27 @@ class Webshop {
         }
     }
 
-    private AttachEventToButtons (event: any): void {
+    private attachEventToButtons (event: any): void {
         let buttons = document.getElementsByTagName("button");
         let buttonsCount = buttons.length;
 
-        for (let i = 0; i <= buttonsCount; i += 1) {
+        for (let i = 0; i < buttonsCount; i += 1) {
             buttons[i].onclick = () => {
-                event(buttons[i].id)
-            };
+                event(buttons[i].id);
+            }
         }​
+    }
+
+    private attachEventToSearchField(event: any): void {
+        let searchField = document.getElementById("search-field");
+        searchField.onkeyup = () => {
+            event();
+        }
     }
 
 }
 
-swallowErrors("Errors from webshop-1-static", () => {
-});
-
 let webshop = new Webshop();
 
-
+// swallowErrors("Errors from webshop-1-static", () => {
+// });
