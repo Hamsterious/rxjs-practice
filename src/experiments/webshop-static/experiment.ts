@@ -47,9 +47,10 @@ class Webshop {
 
     private notifyProductAddedToCart(productId: number): void{
         let content = `
-        <div>
-            <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
-        </div>`;
+            <div>
+                <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
+            </div>
+        `;
 
         renderElement(`#${productId.toString()}`, 0, content);
 
@@ -63,17 +64,18 @@ class Webshop {
 
         let content:string = "";
         products.forEach(product => {
-            content +=  
-            `<div class="card product" style="width: 15rem;">
-                <img class="card-img-top" src="${ product.image }" alt="Card image cap">
-                <div class="card-block">
-                    <h4 class="card-title">${ product.title }</h4>
-                    <p class="card-text">${ product.description }</p>
-                    <p><strong>Price: </strong>${ product.price }kr<p/>
-                    <button id="${ product.id }" 
-                    class="btn btn-primary">Buy</a>
+            content += `
+                <div class="card product" style="width: 15rem;">
+                    <img class="card-img-top" src="${ product.image }" alt="Card image cap">
+                    <div class="card-block">
+                        <h4 class="card-title">${ product.title }</h4>
+                        <p class="card-text">${ product.description }</p>
+                        <p><strong>Price: </strong>${ product.price }kr<p/>
+                        <button id="${ product.id }" 
+                        class="btn btn-primary">Buy</a>
+                    </div>
                 </div>
-            </div>`;
+            `;
         });
 
         renderElement(".products", 0, content);
@@ -98,33 +100,96 @@ class Webshop {
         toggleVisibility(".products", "none");
         toggleVisibility("#action-area", "none");
 
-        let content;
-        if(this.cart.products.length == 0){
-            content = `
-                <div>
-                    <p id="back-to-products" style="color:blue;cursor:pointer;">Back to products</p>
-                    <h2>Your cart</h2>
-                    <p>Nothing in your cart.</p>
-                </div>`;
-        
-        } else {
-            let listOfProducts = "<ul>";
-            this.cart.products.forEach(x => {
-                listOfProducts += `<li>${ x.title } - <span>Delete</span></li>`;
-            });
-            listOfProducts += "</ul>";
+        let content = `
+            <p id="back-to-products" style="color:blue; cursor:pointer;">
+                Back to products
+            </p>
+            <h2>Your cart</h2>
+        `;
 
-            content = `
-                <p id="back-to-products" style="color:blue;cursor:pointer;">
-                    Back to products
-                </p>
-                <h2>Your cart</h2>
-                ${ listOfProducts }`
-        }
+        if(this.cart.products.length == 0) 
+            content += `<p>Nothing in your cart.</p>`;
+        else 
+            content += `${ this.getCartTable() }`;
 
         removeContentFrom(".cart");
-        renderElement("div.cart", 0, content);
+        renderElement(".cart", 0, content);
         attachEvent("#back-to-products", "click", this.showProductArea);
+    }
+
+    private getCartTable = (): string => {
+
+        let cart: string;
+
+        // Begin cart table
+        cart = `
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-info">
+                        <th></th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th>Price pr. unit</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        // Build table row for each unique product
+        let uniqueProduct = [...new Set(this.cart.products)];
+        let totalPrice: number = 0;
+
+        uniqueProduct.forEach(product => {
+            // Prepare data
+            let occurences = this.cart.products.filter(x => x.id == product.id);
+            let amount = occurences.length;
+            let total = occurences.reduce((total, product) => {
+                return total + product.price;
+            },0);
+
+            // Add to overall total
+            totalPrice += total;
+
+            // Build row
+            cart += `
+                <tr>
+                    <td><img src="${ product.image }"></img></td>
+                    <td class="vert-align" >${ product.title }</td>
+                    <td class="vert-align" >${ amount }</td>
+                    <td class="vert-align" >${ product.price }</td>
+                    <td class="vert-align" >${ total }</td>
+                </tr>
+            `;
+        });
+
+        // Close cart table
+        cart += `
+                </tbody>
+            </table>
+        `;
+
+        // Summarize total
+        if(this.spendToGetOffer(totalPrice) >= 0) {
+            cart += `
+                <span style="font-size:32px;">Total price: ${ totalPrice }kr. Buy for ${ this.spendToGetOffer(totalPrice) }kr extra to save 20% !</span>
+            `;
+        } else {
+            let reducedTotalPrice = totalPrice * 0.8;
+            let savings = totalPrice - reducedTotalPrice;
+            cart += `
+                <p style="font-size:32px;">
+                    Total price: <s>${ totalPrice }kr</s> ${ reducedTotalPrice  }kr.
+                </p> 
+                <p>We want to thank you for your large order, so we cut off 20%. That means you just saved <em>${ savings }kr</em>.</p>
+            `;
+        }
+
+        return cart;
+    }
+
+    private spendToGetOffer = (totalPrice: number): number => {
+        return 900 - totalPrice;
     }
 }
 
