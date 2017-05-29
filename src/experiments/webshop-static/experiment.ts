@@ -169,23 +169,27 @@ class Webshop {
             </table>
         `;
 
-        // Summarize total
+        cart += this.totalMessage(totalPrice);
+
+        return cart;
+    }
+
+    private totalMessage = (totalPrice: number): string => {
         if(this.spendToGetOffer(totalPrice) >= 0) {
-            cart += `
+           return `
                 <span style="font-size:32px;">Total price: ${ totalPrice }kr. Buy for ${ this.spendToGetOffer(totalPrice) }kr extra to save 20% !</span>
             `;
         } else {
-            let reducedTotalPrice = totalPrice * 0.8;
-            let savings = totalPrice - reducedTotalPrice;
-            cart += `
+            let reducedTotalPrice = Math.floor(totalPrice * 0.8);
+            let savings = Math.floor(totalPrice - reducedTotalPrice);
+
+            return `
                 <p style="font-size:32px;">
                     Total price: <s>${ totalPrice }kr</s> ${ reducedTotalPrice  }kr.
                 </p> 
-                <p>We want to thank you for your large order, so we cut off 20%. That means you just saved <em>${ savings }kr</em>.</p>
+                <p>We cut off 20% as a thanks for your large order. You just saved <em>${ savings }kr!</em></p>
             `;
         }
-
-        return cart;
     }
 
     private spendToGetOffer = (totalPrice: number): number => {
