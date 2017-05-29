@@ -72,7 +72,7 @@ class Webshop {
                 this.cart.removeAllProductsById(product.id);
                 
                 // Add X products.
-                this.cart.addXProducts(product, newAmount);
+                this.cart.addProductXtimes(product, newAmount);
 
             } catch(e) {
                 // No product of this type in cart.

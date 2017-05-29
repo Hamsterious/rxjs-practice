@@ -18,7 +18,7 @@ class Cart {
         this.products.push(product);
     }
 
-    public addXProducts = (product: Product, timesToAdd: number): void => {
+    public addProductXtimes = (product: Product, timesToAdd: number): void => {
         while(timesToAdd > 0) {
             this.addProduct(product);
             timesToAdd--;
