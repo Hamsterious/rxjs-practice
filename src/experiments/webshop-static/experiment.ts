@@ -227,7 +227,4 @@ class Webshop {
     }
 }
 
-let webshop = new Webshop();
-
-// swallowErrors("Errors from webshop-1-static", () => {
-// });
+new Webshop();
