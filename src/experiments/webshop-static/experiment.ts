@@ -59,6 +59,32 @@ class Webshop {
         }, 500);
     }
 
+    private updateCart = (): void => {
+        let uniqueProduct = [...new Set(this.cart.products)];
+        
+        uniqueProduct.forEach(product => {
+            try {
+                // Get the currents products updated value
+                let element: any = document.querySelector(`[name="p${product.id}"]`);
+                let newAmount = element.value;
+
+                // Empty the cart for all the old products of this type.
+                this.cart.removeAllProductsById(product.id);
+                
+                // Add X products.
+                this.cart.addXProducts(product, newAmount);
+
+            } catch(e) {
+                // No product of this type in cart.
+                console.log(e.Errors);
+            }
+           
+            // If getting value was successful, remove old cart value
+        });
+
+        this.showCartArea();
+    }
+
     // Show methods
     private showProducts(products: Product[]): void {
 
@@ -100,7 +126,7 @@ class Webshop {
         toggleVisibility(".products", "none");
         toggleVisibility("#action-area", "none");
 
-        let content = `
+        let cart = `
             <p id="back-to-products" style="color:blue; cursor:pointer;">
                 Back to products
             </p>
@@ -108,13 +134,14 @@ class Webshop {
         `;
 
         if(this.cart.products.length == 0) 
-            content += `<p>Nothing in your cart.</p>`;
+            cart += `<p>Nothing in your cart.</p>`;
         else 
-            content += `${ this.getCartTable() }`;
+            cart += `${ this.getCartTable() }`;
 
         removeContentFrom(".cart");
-        renderElement(".cart", 0, content);
+        renderElement(".cart", 0, cart);
         attachEvent("#back-to-products", "click", this.showProductArea);
+        attachEvent(".update-cart", "click", this.updateCart);
     }
 
     private getCartTable = (): string => {
@@ -156,7 +183,7 @@ class Webshop {
                 <tr>
                     <td><img src="${ product.image }"></img></td>
                     <td class="vert-align" >${ product.title }</td>
-                    <td class="vert-align" >${ amount }</td>
+                    <td class="vert-align" ><input name="p${ product.id }" type="number" value="${ amount }" /></td>
                     <td class="vert-align" >${ product.price }</td>
                     <td class="vert-align" >${ total }</td>
                 </tr>
@@ -167,6 +194,9 @@ class Webshop {
         cart += `
                 </tbody>
             </table>
+            <button class="btn btn-primary update-cart" style="float:right;">
+                Update cart
+            </button>
         `;
 
         cart += this.totalMessage(totalPrice);
