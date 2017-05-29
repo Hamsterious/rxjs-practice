@@ -17,7 +17,7 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
     return thePromise;
 };
 
-function renderSuggestedGithubUser(suggestedUser, selector) {
+function renderSuggestedGithubUser(suggestedUser, selector): void {
     toggleVisibility(selector, "");
     
     if(suggestedUser === null) {
@@ -34,16 +34,19 @@ function renderSuggestedGithubUser(suggestedUser, selector) {
     }
 }
 
-let renderElement = (renderElementSelector: string, getNthParent, content: string ) => {
-
-    // Target element to render input inside
+let getTargetElement = (selector: string): any => {
     let targetElement;
-    if(renderElementSelector.charAt(0) == '#') {
-        renderElementSelector = renderElementSelector.replace('#','');
-        targetElement = document.getElementById(renderElementSelector);
+    if(selector.charAt(0) == '#') {
+        selector = selector.replace('#','');
+        targetElement = document.getElementById(selector);
     } else {
-        targetElement = document.querySelector(renderElementSelector);
+        targetElement = document.querySelector(selector);
     }
+    return targetElement
+}
+
+let renderElement = (selector: string, getNthParent, content: string ): void => {
+    let targetElement = getTargetElement(selector);
 
     // Get number of parents specified
     if(getNthParent != 0) {
@@ -64,20 +67,18 @@ let renderElement = (renderElementSelector: string, getNthParent, content: strin
     targetElement.appendChild(e.firstChild);
 }
 
-let toggleVisibility = (selector:string, visibility: string) =>  {
-    let targetElement;
-    if(selector.charAt(0) == '#') {
-        selector = selector.replace('#','');
-        targetElement = document.getElementById(selector);
-    } else {
-        targetElement = document.querySelector(selector);
-    }
+let removeContentFrom = (selector): void => {
+    let targetElement = getTargetElement(selector);
+    targetElement.innerHTML = "";
+} 
 
+let toggleVisibility = (selector:string, visibility: string): void =>  {
+    let targetElement = getTargetElement(selector);
     targetElement.style.display = visibility;
 }
 
 let attachEvent = (selector: string, event: string, callback: () => void) => {
-    let targetElement;
+   let targetElement;
     if(selector.charAt(0) == '#') {
         selector = selector.replace('#','');
         targetElement = document.getElementById(selector);
@@ -96,7 +97,7 @@ let attachEvent = (selector: string, event: string, callback: () => void) => {
     }
 }
 
-function swallowErrors(message, action) {
+function swallowErrors(message, action): void {
     try {
         action();
     } catch (e) { 
@@ -109,5 +110,6 @@ export {
     renderSuggestedGithubUser,
     renderElement,
     toggleVisibility,
-    attachEvent
+    attachEvent,
+    removeContentFrom
 };

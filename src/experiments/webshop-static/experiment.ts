@@ -1,4 +1,10 @@
-import { swallowErrors, renderElement, toggleVisibility, attachEvent } from '../../helpers';
+import { 
+    swallowErrors, 
+    renderElement, 
+    toggleVisibility, 
+    attachEvent, 
+    removeContentFrom 
+} from '../../helpers';
 import { Product, Cart } from './models';
 import { Products } from './products';
 
@@ -56,7 +62,7 @@ class Webshop {
     private showProducts(products: Product[]): void {
 
         let content:string = "";
-        for(let product of products){
+        products.forEach(product => {
             content +=  
             `<div class="card product" style="width: 15rem;">
                 <img class="card-img-top" src="${ product.image }" alt="Card image cap">
@@ -68,18 +74,17 @@ class Webshop {
                     class="btn btn-primary">Buy</a>
                 </div>
             </div>`;
-        }
-        renderElement("div.products", 0, content);
+        });
+
+        renderElement(".products", 0, content);
 
         // Attach events
-        let buttons = document.getElementsByTagName("button");
-        let buttonsCount = buttons.length;
-
-        for (let i = 0; i < buttonsCount; i += 1) {
-            buttons[i].onclick = () => {
-                this.addToCart(parseInt(buttons[i].id));
+        let buttons = Array.from(document.getElementsByTagName("button"));
+        buttons.forEach(button => {
+            button.onclick = () => {
+                this.addToCart(parseInt(button.id));
             }
-        }​
+        });
     }
 
     private showProductArea = (): void => {
@@ -117,7 +122,7 @@ class Webshop {
                 ${ listOfProducts }`
         }
 
-        document.querySelector(".cart").innerHTML = "";
+        removeContentFrom(".cart");
         renderElement("div.cart", 0, content);
         attachEvent("#back-to-products", "click", this.showProductArea);
     }
