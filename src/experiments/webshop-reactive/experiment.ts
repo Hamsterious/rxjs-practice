@@ -8,7 +8,7 @@ import {
 import { Product, Cart } from './models';
 import { Products } from './products';
 
-if(document.getElementById("static") != undefined){
+if(document.getElementById("reactive") != undefined){
 
 class Webshop {
 
@@ -232,3 +232,4 @@ class Webshop {
 new Webshop();
 
 }
+
