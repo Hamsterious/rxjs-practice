@@ -8,11 +8,12 @@ var buffer = require('vinyl-buffer');
 var browserSync = require('browser-sync').create();
 
 var paths = {
-    pages: ['src/**/*.html']
+    pages: ['src/**/*.html'],
+    css: ['src/**/*.css']
 };
 
 // use default task to launch Browsersync and watch JS files
-gulp.task('default', ['js', 'copy-html'], function() {
+gulp.task('default', ['js', 'copy-html', 'copy-css'], function() {
 
     // Serve files from the root of this project
     browserSync.init({
@@ -49,9 +50,14 @@ gulp.task("copy-html", function() {
         .pipe(gulp.dest("dist"));
 });
 
+gulp.task("copy-css", function() {
+    return gulp.src(paths.css)
+        .pipe(gulp.dest("dist"));
+});
+
 // create a task that ensures the `js` task is complete before
 // reloading browsers
-gulp.task('js-watch', ['js', 'copy-html'], function(done) {
+gulp.task('js-watch', ['js', 'copy-html', 'copy-css'], function(done) {
     browserSync.reload();
     done();
 });

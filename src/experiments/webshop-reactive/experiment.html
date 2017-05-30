@@ -11,57 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
     <!-- Styles -->
-    <style>
-        h1 {
-            margin: 2.5rem 0;
-            display: inline-block;
-        }
-        
-        img {
-            width: 14.8rem;
-            height: 10rem;
-        }
-        
-        table img {
-            width: 100px;
-            height: 100px;
-        }
-        
-        table td,
-        table th {
-            text-align: center;
-        }
-        
-        table tbody>tr>td.vert-align {
-            vertical-align: middle;
-        }
-        
-        #action-area {
-            float: right;
-            margin-top: 3rem;
-        }
-        
-        #action-area img,
-        #back-to-products img {
-            width: 25px;
-            height: 25px;
-        }
-        
-        #added-to-cart-notification {
-            position: absolute;
-            bottom: 45px;
-            right: 34px;
-        }
-        
-        #show-cart {
-            cursor: pointer;
-        }
-        
-        .cart input {
-            width: 50px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="./experiment.css">
 
     <!-- Title -->
     <title>Webshop</title>
@@ -74,6 +24,8 @@
 
         <!-- Title -->
         <h1>Modern Webshop</h1>
+
+        <div class="notifications"></div>
 
         <!-- Action area -->
         <div id="action-area">
@@ -96,6 +48,9 @@
 
         <!-- Products -->
         <div class="products card-columns"></div>
+
+        <!-- Reactive Cart -->
+        <div class="reactive-cart"></div>
 
         <!-- Cart -->
         <div class="cart"></div>

@@ -1,0 +1,63 @@
+h1 {
+    margin: 2.5rem 0;
+    display: inline-block;
+}
+
+img {
+    width: 14.8rem;
+    height: 10rem;
+}
+
+table img {
+    width: 100px;
+    height: 100px;
+}
+
+table td,
+table th {
+    text-align: center;
+}
+
+table tbody>tr>td.vert-align {
+    vertical-align: middle;
+}
+
+#action-area {
+    float: right;
+    margin-top: 3rem;
+}
+
+#action-area img,
+#back-to-products img {
+    width: 25px;
+    height: 25px;
+}
+
+#added-to-cart-notification {
+    position: absolute;
+    bottom: 45px;
+    right: 34px;
+}
+
+#show-cart {
+    cursor: pointer;
+}
+
+.cart input {
+    width: 50px;
+    text-align: center;
+}
+
+#action-area {
+    position: absolute;
+    top: 0px;
+    right: 100px;
+}
+
+#notification {
+    position: fixed;
+    top: 10px;
+    left: 400px;
+    font-size: 15px;
+    z-index: 1000;
+}

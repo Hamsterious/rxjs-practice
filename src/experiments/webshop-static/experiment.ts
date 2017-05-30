@@ -33,7 +33,6 @@ class Webshop {
     }
 
     private searchProducts() {
-        console.log("he");
         let searchFieldValue: any = document.getElementById('search-field');
         let searchTerm = searchFieldValue.value.toUpperCase();
         let domProducts = document.querySelectorAll("h4");

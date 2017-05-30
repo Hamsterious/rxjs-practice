@@ -24,6 +24,7 @@ class Webshop {
         this.showProducts(this.products);
         attachEvent("#search-field", "keyup", this.searchProducts);
         attachEvent("#show-cart", "click", this.showCartArea);
+        this.notifications();
     }
 
     // Webshop Methods
@@ -33,8 +34,8 @@ class Webshop {
         this.notifyProductAddedToCart(productId);
     }
 
-    private searchProducts() {
-        let searchFieldValue: any = document.getElementById('search-field');
+    private searchProducts = (): void => {
+               let searchFieldValue: any = document.getElementById('search-field');
         let searchTerm = searchFieldValue.value.toUpperCase();
         let domProducts = document.querySelectorAll("h4");
 
@@ -47,7 +48,7 @@ class Webshop {
         }
     }
 
-    private notifyProductAddedToCart(productId: number): void{
+    private notifyProductAddedToCart = (productId: number): void => {
         let content = `
             <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
         `;
@@ -77,8 +78,7 @@ class Webshop {
             } catch(e) {
                 // No product of this type in cart.
                 console.log(e.Errors);
-            }
-           
+            }           
             // If getting value was successful, remove old cart value
         });
 
@@ -86,7 +86,9 @@ class Webshop {
     }
 
     // Show methods
-    private showProducts(products: Product[]): void {
+    private showProducts = (products: Product[]): void => {
+
+        removeContentFrom('.products');
 
         let content:string = "";
         products.forEach(product => {
@@ -225,6 +227,46 @@ class Webshop {
     private spendToGetOffer = (totalPrice: number): number => {
         return 900 - totalPrice;
     }
+
+    // RxJS methods
+    private notifications = (): void => {
+        // Notifications we want to show
+        let notifications: string[] = [
+            "🔔 Hello and welcome!",
+            "👍 Take your time and look around :)",
+            "💰 Buy for 900kr + and save 20% !",
+            "📞 Questions? Call 2X 3X 4X 5X",
+        ];
+
+        let notificationStream = Rx.Observable
+        // Show a new notification every X milliseconds
+        .interval(3000)
+        // Show X notifications matching the number of notifications, then end.
+        .take(notifications.length)
+        // Get the current notification
+        .map((x: any) => {
+            return notifications[x];
+        })
+        // Render the notofication.
+        .subscribe((x: any) => {
+            removeContentFrom(".notifications");
+            let content = `<span id="notification">${x}</span>`;
+            renderElement(".notifications", 0, content);
+        },
+        // Error handling
+        () => {},
+        // On complete, call notifications() again to repeat indefinitely.
+        () => {this.notifications()});
+    }
+
+    //  private showNotification = (notification: string): void => {
+    //     let reference = document.querySelector("h1");
+    //     let e = document.createElement('div');
+
+    //     // Content for the element
+    //     e.innerHTML = `<span style="float:left;">${x}    </span>`;
+    //     reference.parentNode.insertBefore(e, reference.nextSibling);
+    // }
 }
 
 new Webshop();
