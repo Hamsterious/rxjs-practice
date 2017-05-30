@@ -64,7 +64,9 @@ let renderElement = (selector: string, getNthParent, content: string ): void => 
     e.innerHTML = "<div>" + content + "</div>";
 
     // Render element
-    targetElement.appendChild(e.firstChild);
+    try{
+        targetElement.appendChild(e.firstChild);
+    } catch (e) {}
 }
 
 let removeContentFrom = (selector): void => {
