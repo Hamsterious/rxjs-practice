@@ -63,7 +63,8 @@ table tbody>tr>td.vert-align {
 }
 
 .new-product-notification {
-    right: 300px;
+    font-size: 20px;
+    right: 100px;
 }
 
 .message-notification-content {
