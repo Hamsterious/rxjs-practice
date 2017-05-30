@@ -262,6 +262,10 @@ class Webshop {
             this.showProduct(x);
             removeContentFrom(".new-product-notification");
             renderElement(".new-product-notification", 0, notification);
+        },
+        () => {},
+        () => {
+            setTimeout(() => removeContentFrom(".new-product-notification"), 5000)
         });
     }
 }
