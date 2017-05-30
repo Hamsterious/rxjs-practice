@@ -27,7 +27,9 @@ class Webshop {
     constructor() { 
         this.products = Products;
         this.cart = new Cart();
-        this.showProducts(this.products);
+        this.products.forEach((product) => {
+            this.showProduct(product);
+        });
         attachEvent("#search-field", "keyup", this.searchProducts);
         attachEvent("#show-cart", "click", this.showCartArea);
         
@@ -86,7 +88,7 @@ class Webshop {
 
             } catch(e) {
                 // No product of this type in cart.
-                console.log(e.Errors);
+                console.log(e);
             }           
             // If getting value was successful, remove old cart value
         });
@@ -95,35 +97,28 @@ class Webshop {
     }
 
     // Show methods
-    private showProducts = (products: Product[]): void => {
+    private showProduct = (product: Product): void => {
 
-        removeContentFrom('.products');
-
-        let content:string = "";
-        products.forEach(product => {
-            content += `
-                <div class="card product" style="width: 15rem;">
-                    <img class="card-img-top" src="${ product.image }" alt="Card image cap">
-                    <div class="card-block">
-                        <h4 class="card-title">${ product.title }</h4>
-                        <p class="card-text">${ product.description }</p>
-                        <p><strong>Price: </strong>${ product.price }kr<p/>
-                        <button id="${ product.id }" 
-                        class="btn btn-primary">Buy</a>
-                    </div>
+        let content:string = `
+            <div class="card product" style="width: 15rem;">
+                <img class="card-img-top" src="${ product.image }" alt="Card image cap">
+                <div class="card-block">
+                    <h4 class="card-title">${ product.title }</h4>
+                    <p class="card-text">${ product.description }</p>
+                    <p><strong>Price: </strong>${ product.price }kr<p/>
+                    <button id="${ product.id }" 
+                    class="btn btn-primary">Buy</a>
                 </div>
-            `;
-        });
+            </div>
+        `;
 
         renderElement(".products", 0, content);
 
-        // Attach events
-        let buttons = Array.from(document.getElementsByTagName("button"));
-        buttons.forEach(button => {
-            button.onclick = () => {
-                this.addToCart(parseInt(button.id));
-            }
-        });
+        // Attach event
+        let button = document.getElementById(`${ product.id }`);
+        button.onclick = () => {
+            this.addToCart(product.id);
+        }
     }
 
     private showProductArea = (): void => {
@@ -259,12 +254,12 @@ class Webshop {
         .interval(10000)
         .take(NewProducts.length)
         .map((x: any) => {
-            this.products.unshift(NewProducts[x]);
             return NewProducts[x];
         })
-        .subscribe((x) => {
+        .subscribe((x: any) => {
             let notification = `<span class="new-product-notification-content" style="color:green;">New product just added: ${x.title}</span>`;
-            this.showProducts(this.products);
+            this.products.push(x)
+            this.showProduct(x);
             removeContentFrom(".new-product-notification");
             renderElement(".new-product-notification", 0, notification);
         });
