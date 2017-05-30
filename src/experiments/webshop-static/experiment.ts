@@ -49,9 +49,7 @@ class Webshop {
 
     private notifyProductAddedToCart(productId: number): void{
         let content = `
-            <div>
-                <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
-            </div>
+            <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
         `;
 
         renderElement(`#${productId.toString()}`, 0, content);
@@ -78,10 +76,7 @@ class Webshop {
 
             } catch(e) {
                 // No product of this type in cart.
-                console.log(e.Errors);
             }
-           
-            // If getting value was successful, remove old cart value
         });
 
         this.showCartArea();
