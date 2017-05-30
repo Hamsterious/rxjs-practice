@@ -7,7 +7,7 @@ import {
     removeContentFrom 
 } from '../../helpers';
 import { Product, Cart } from './models';
-import { Products } from './products';
+import { Products, NewProducts } from './products';
 
 if(document.getElementById("reactive") != undefined){
 
@@ -16,6 +16,12 @@ class Webshop {
     // Properties
     public products: Product[];
     public cart: Cart;
+    public notificationCollection: string[] = [
+            "🔔 Hello and welcome!",
+            "👍 Take your time and look around :)",
+            "💰 Buy for 900kr + and save 20% !",
+            "📞 Questions? Call 2X 3X 4X 5X",
+        ];
 
     // Constructor
     constructor() { 
@@ -24,7 +30,10 @@ class Webshop {
         this.showProducts(this.products);
         attachEvent("#search-field", "keyup", this.searchProducts);
         attachEvent("#show-cart", "click", this.showCartArea);
+        
+        // RxJS
         this.notifications();
+        this.addNewProducts();
     }
 
     // Webshop Methods
@@ -230,43 +239,36 @@ class Webshop {
 
     // RxJS methods
     private notifications = (): void => {
-        // Notifications we want to show
-        let notifications: string[] = [
-            "🔔 Hello and welcome!",
-            "👍 Take your time and look around :)",
-            "💰 Buy for 900kr + and save 20% !",
-            "📞 Questions? Call 2X 3X 4X 5X",
-        ];
-
         let notificationStream = Rx.Observable
-        // Show a new notification every X milliseconds
-        .interval(3000)
-        // Show X notifications matching the number of notifications, then end.
-        .take(notifications.length)
-        // Get the current notification
+        .interval(5000)
+        .take(this.notificationCollection.length)
         .map((x: any) => {
-            return notifications[x];
+            return this.notificationCollection[x];
         })
-        // Render the notofication.
         .subscribe((x: any) => {
-            removeContentFrom(".notifications");
-            let content = `<span id="notification">${x}</span>`;
-            renderElement(".notifications", 0, content);
+            let notification = `<span class="message-notification-content">${x}</span>`;
+            removeContentFrom(".message-notification");
+            renderElement(".message-notification", 0, notification);
         },
-        // Error handling
         () => {},
-        // On complete, call notifications() again to repeat indefinitely.
         () => {this.notifications()});
     }
 
-    //  private showNotification = (notification: string): void => {
-    //     let reference = document.querySelector("h1");
-    //     let e = document.createElement('div');
-
-    //     // Content for the element
-    //     e.innerHTML = `<span style="float:left;">${x}    </span>`;
-    //     reference.parentNode.insertBefore(e, reference.nextSibling);
-    // }
+    private addNewProducts = (): void => {
+        let newProductsStream = Rx.Observable
+        .interval(10000)
+        .take(NewProducts.length)
+        .map((x: any) => {
+            this.products.unshift(NewProducts[x]);
+            return NewProducts[x];
+        })
+        .subscribe((x) => {
+            let notification = `<span class="new-product-notification-content" style="color:green;">New product just added: ${x.title}</span>`;
+            this.showProducts(this.products);
+            removeContentFrom(".new-product-notification");
+            renderElement(".new-product-notification", 0, notification);
+        });
+    }
 }
 
 new Webshop();

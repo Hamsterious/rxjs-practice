@@ -54,10 +54,24 @@ table tbody>tr>td.vert-align {
     right: 100px;
 }
 
-#notification {
+.message-notification,
+.new-product-notification {
     position: fixed;
     top: 10px;
-    left: 400px;
     font-size: 15px;
     z-index: 1000;
+}
+
+.new-product-notification {
+    left: 320px;
+}
+
+.message-notification-content {
+    background-color: lightblue;
+    padding: 5px;
+}
+
+.new-product-notification-content {
+    padding: 5px;
+    background-color: gainsboro;
 }
