@@ -34,7 +34,7 @@ class Webshop {
         // RxJS
         this.notifications();
         this.addNewProducts();
-        this.reactiveCart();
+        this.showReactiveCart();
     }
 
     // Webshop Methods
@@ -42,6 +42,7 @@ class Webshop {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
         this.showAddToCartNotification(productId);
+        this.addProductToReactiveCart(product);
     }
 
     private searchProducts = (): void => {
@@ -193,15 +194,15 @@ class Webshop {
         });
     }
 
-    private reactiveCart = (): void => {
-        let reactiveCart = `
-            <div>
-                <h4>Your cart</h4>
-                <span id="hide-cart-button">Hide</span>
-            </div>
-        `;
-
-        this.showReactiveCart(reactiveCart);
+    private addProductToReactiveCart = (product: Product): void => {
+        let productStream = Rx.Observable
+        .of(product)
+        .map((x: Product) => {
+            return `${x.title}`
+        })
+        .subscribe((x: any) => {
+            renderElement(".reactive-cart-content", 0, x);
+        });
     }
 
     // Show methods
@@ -258,7 +259,13 @@ class Webshop {
         attachEvent(".update-cart", "click", this.updateCart);
     }
 
-    private showReactiveCart = (reactiveCart: string): void => {
+    private showReactiveCart = (): void => {
+        let reactiveCart = `
+            <h4 style="display:inline-block;">Your cart</h4>
+            <span id="hide-cart-button" class="btn btn-primary btn-sm" style="float:right;">Hide</span>
+            <div class="reactive-cart-content"></div>
+        `;
+
         let revealCart = `
             <span class="btn btn-primary btn-sm reveal-cart-button">Show cart</span>
         `;
