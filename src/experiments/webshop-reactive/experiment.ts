@@ -42,7 +42,7 @@ class Webshop {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
         this.showAddToCartNotification(productId);
-        this.addProductToReactiveCart(product);
+        this.updateReactiveCart();
     }
 
     private searchProducts = (): void => {
@@ -82,6 +82,7 @@ class Webshop {
         });
 
         this.showCartArea();
+        this.updateReactiveCart();
     }
 
     private spendToGetOffer = (totalPrice: number): number => {
@@ -194,15 +195,38 @@ class Webshop {
         });
     }
 
-    private addProductToReactiveCart = (product: Product): void => {
-        let productStream = Rx.Observable
-        .of(product)
-        .map((x: Product) => {
-            return `${x.title}`
+    private updateReactiveCart = (): void => {
+        
+        removeContentFrom(".reactive-cart-content");
+
+        let uniqueProducts = [...new Set(this.cart.products)];
+        let uniqueCartProductStream = Rx.Observable
+        .from(uniqueProducts)
+        .map((product: any) => {
+            let occurences = this.cart.products.filter(x => x.id == product.id);
+            let amount = occurences.length;
+            let total = occurences.reduce((total, product) => {
+                return total + product.price;
+            },0);
+
+            return `
+                <li>
+                    <img src="${product.image}"
+                        style="width:25px; height:25px;margin-right:10px;">
+                    </img>
+                     ${product.title}
+                     <br />
+                     x${ amount }
+                    = ${total}kr
+                    <hr />
+                </li>
+            `;
         })
         .subscribe((x: any) => {
-            renderElement(".reactive-cart-content", 0, x);
+            let content = `<ul style="list-style: none;padding: 0;">${x}</ul>`;
+            renderElement(".reactive-cart-content", 0, content);
         });
+
     }
 
     // Show methods
@@ -234,12 +258,15 @@ class Webshop {
         toggleVisibility(".cart", "none");
         toggleVisibility(".products", "");
         toggleVisibility("#action-area", "");
+        toggleVisibility("#reactive-cart", "");
     }
 
     private showCartArea = (): void => {
         toggleVisibility(".cart", "");
         toggleVisibility(".products", "none");
         toggleVisibility("#action-area", "none");
+        toggleVisibility("#reactive-cart", "none");
+        toggleVisibility("#reveal-cart", "none");
 
         let cart = `
             <p id="back-to-products" style="color:blue; cursor:pointer;">

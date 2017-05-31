@@ -79,7 +79,7 @@ table tbody>tr>td.vert-align {
 
 #reactive-cart {
     height: 200px;
-    width: 500px;
+    width: 250px;
     position: fixed;
     bottom: 50px;
     margin: 0 auto;
@@ -109,7 +109,7 @@ table tbody>tr>td.vert-align {
     border: 1px black solid;
     border-radius: 10px;
     position: fixed;
-    bottom: 500px;
+    bottom: 180px;
     right: 50px;
     z-index: 2000;
 }
