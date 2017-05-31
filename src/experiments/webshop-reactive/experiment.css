@@ -76,3 +76,44 @@ table tbody>tr>td.vert-align {
     padding: 5px;
     background-color: gainsboro;
 }
+
+#reactive-cart {
+    height: 200px;
+    width: 500px;
+    position: fixed;
+    bottom: 50px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 10px;
+    z-index: 2000;
+    padding: 20px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#reactive-cart::-webkit-scrollbar {
+    width: 15px;
+}
+
+#reactive-cart::-webkit-scrollbar-thumb {
+    background: #868686;
+    border-radius: 30px;
+}
+
+#reveal-cart {
+    display: none;
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 10px;
+    position: fixed;
+    bottom: 500px;
+    right: 50px;
+    z-index: 2000;
+}
+
+.reveal-cart-button {
+    margin: 20px;
+}

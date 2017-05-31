@@ -113,5 +113,6 @@ export {
     renderElement,
     toggleVisibility,
     attachEvent,
-    removeContentFrom
+    removeContentFrom,
+    getTargetElement
 };

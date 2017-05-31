@@ -14,19 +14,17 @@ if(document.getElementById("reactive") != undefined){
 class Webshop {
 
     // Properties
-    public products: Product[];
-    public cart: Cart;
+    public products: Product[] = Products;
+    public cart: Cart = new Cart();
     public notificationCollection: string[] = [
-            "🔔 Hello and welcome!",
-            "👍 Take your time and look around :)",
-            "💰 Buy for 900kr + and save 20% !",
-            "📞 Questions? Call 2X 3X 4X 5X",
-        ];
+        "🔔 Hello and welcome!",
+        "👍 Take your time and look around :)",
+        "💰 Buy for 900kr + and save 20% !",
+        "📞 Questions? Call 2X 3X 4X 5X",
+    ];
 
     // Constructor
     constructor() { 
-        this.products = Products;
-        this.cart = new Cart();
         this.products.forEach((product) => {
             this.showProduct(product);
         });
@@ -36,17 +34,18 @@ class Webshop {
         // RxJS
         this.notifications();
         this.addNewProducts();
+        this.reactiveCart();
     }
 
     // Webshop Methods
     private addToCart = (productId: number): void => {
         let product: Product = this.products.find(x => x.id == productId);
         this.cart.addProduct(product);
-        this.notifyProductAddedToCart(productId);
+        this.showAddToCartNotification(productId);
     }
 
     private searchProducts = (): void => {
-               let searchFieldValue: any = document.getElementById('search-field');
+        let searchFieldValue: any = document.getElementById('search-field');
         let searchTerm = searchFieldValue.value.toUpperCase();
         let domProducts = document.querySelectorAll("h4");
 
@@ -57,18 +56,6 @@ class Webshop {
                 domProducts[i].parentElement.parentElement.style.display = "none";
             }
         }
-    }
-
-    private notifyProductAddedToCart = (productId: number): void => {
-        let content = `
-            <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
-        `;
-
-        renderElement(`#${productId.toString()}`, 0, content);
-
-        setTimeout(() => {
-            document.getElementById("added-to-cart-notification").remove();
-        }, 500);
     }
 
     private updateCart = (): void => {
@@ -96,61 +83,11 @@ class Webshop {
         this.showCartArea();
     }
 
-    // Show methods
-    private showProduct = (product: Product): void => {
-
-        let content:string = `
-            <div class="card product" style="width: 15rem;">
-                <img class="card-img-top" src="${ product.image }" alt="Card image cap">
-                <div class="card-block">
-                    <h4 class="card-title">${ product.title }</h4>
-                    <p class="card-text">${ product.description }</p>
-                    <p><strong>Price: </strong>${ product.price }kr<p/>
-                    <button id="${ product.id }" 
-                    class="btn btn-primary">Buy</a>
-                </div>
-            </div>
-        `;
-
-        renderElement(".products", 0, content);
-
-        // Attach event
-        let button = document.getElementById(`${ product.id }`);
-        button.onclick = () => {
-            this.addToCart(product.id);
-        }
+    private spendToGetOffer = (totalPrice: number): number => {
+        return 900 - totalPrice;
     }
 
-    private showProductArea = (): void => {
-        toggleVisibility(".cart", "none");
-        toggleVisibility(".products", "");
-        toggleVisibility("#action-area", "");
-    }
-
-    private showCartArea = (): void => {
-        toggleVisibility(".cart", "");
-        toggleVisibility(".products", "none");
-        toggleVisibility("#action-area", "none");
-
-        let cart = `
-            <p id="back-to-products" style="color:blue; cursor:pointer;">
-                Back to products
-            </p>
-            <h2>Your cart</h2>
-        `;
-
-        if(this.cart.products.length == 0) 
-            cart += `<p>Nothing in your cart.</p>`;
-        else 
-            cart += `${ this.getCartTable() }`;
-
-        removeContentFrom(".cart");
-        renderElement(".cart", 0, cart);
-        attachEvent("#back-to-products", "click", this.showProductArea);
-        attachEvent(".update-cart", "click", this.updateCart);
-    }
-
-    private getCartTable = (): string => {
+    private generateCartTable = (): string => {
 
         let cart: string;
 
@@ -205,12 +142,12 @@ class Webshop {
             </button>
         `;
 
-        cart += this.totalMessage(totalPrice);
+        cart += this.generateTotalMessage(totalPrice);
 
         return cart;
     }
 
-    private totalMessage = (totalPrice: number): string => {
+    private generateTotalMessage = (totalPrice: number): string => {
         if(this.spendToGetOffer(totalPrice) >= 0) {
            return `
                 <span style="font-size:32px;">Total price: ${ totalPrice }kr. Buy for ${ this.spendToGetOffer(totalPrice) }kr extra to save 20% !</span>
@@ -228,10 +165,6 @@ class Webshop {
         }
     }
 
-    private spendToGetOffer = (totalPrice: number): number => {
-        return 900 - totalPrice;
-    }
-
     // RxJS methods
     private notifications = (): void => {
         let notificationStream = Rx.Observable
@@ -240,13 +173,11 @@ class Webshop {
         .map((x: any) => {
             return this.notificationCollection[x];
         })
-        .subscribe((x: any) => {
-            let notification = `<span class="message-notification-content">${x}</span>`;
-            removeContentFrom(".message-notification");
-            renderElement(".message-notification", 0, notification);
-        },
-        () => {},
-        () => {this.notifications()});
+        .subscribe(
+            (x: any) => { this.showNotification(x); },
+            () => {},
+            () => {this.notifications()}
+        );
     }
 
     private addNewProducts = (): void => {
@@ -257,17 +188,122 @@ class Webshop {
             return NewProducts[x];
         })
         .subscribe((x: any) => {
-            let notification = `<span class="new-product-notification-content" style="color:green;">New product just added: ${x.title}</span>`;
-            this.products.push(x)
-            this.showProduct(x);
-            removeContentFrom(".new-product-notification");
-            renderElement(".new-product-notification", 0, notification);
-            setTimeout(() => removeContentFrom(".new-product-notification"), 3000)
+            this.products.push(x);
+            this.showNewProduct(x);
         });
+    }
+
+    private reactiveCart = (): void => {
+        let reactiveCart = `
+            <div>
+                <h4>Your cart</h4>
+                <span id="hide-cart-button">Hide</span>
+            </div>
+        `;
+
+        this.showReactiveCart(reactiveCart);
+    }
+
+    // Show methods
+    private showProduct = (product: Product): void => {
+
+        let content:string = `
+            <div class="card product" style="width: 15rem;">
+                <img class="card-img-top" src="${ product.image }" alt="Card image cap">
+                <div class="card-block">
+                    <h4 class="card-title">${ product.title }</h4>
+                    <p class="card-text">${ product.description }</p>
+                    <p><strong>Price: </strong>${ product.price }kr<p/>
+                    <button id="${ product.id }" 
+                    class="btn btn-primary">Buy</a>
+                </div>
+            </div>
+        `;
+
+        renderElement(".products", 0, content);
+
+        // Attach event
+        let button = document.getElementById(`${ product.id }`);
+        button.onclick = () => {
+            this.addToCart(product.id);
+        }
+    }
+
+    private showProductArea = (): void => {
+        toggleVisibility(".cart", "none");
+        toggleVisibility(".products", "");
+        toggleVisibility("#action-area", "");
+    }
+
+    private showCartArea = (): void => {
+        toggleVisibility(".cart", "");
+        toggleVisibility(".products", "none");
+        toggleVisibility("#action-area", "none");
+
+        let cart = `
+            <p id="back-to-products" style="color:blue; cursor:pointer;">
+                Back to products
+            </p>
+            <h2>Your cart</h2>
+        `;
+
+        if(this.cart.products.length == 0) 
+            cart += `<p>Nothing in your cart.</p>`;
+        else 
+            cart += `${ this.generateCartTable() }`;
+
+        removeContentFrom(".cart");
+        renderElement(".cart", 0, cart);
+        attachEvent("#back-to-products", "click", this.showProductArea);
+        attachEvent(".update-cart", "click", this.updateCart);
+    }
+
+    private showReactiveCart = (reactiveCart: string): void => {
+        let revealCart = `
+            <span class="btn btn-primary btn-sm reveal-cart-button">Show cart</span>
+        `;
+
+        renderElement("#reactive-cart", 0, reactiveCart);
+        renderElement("#reveal-cart", 0, revealCart);
+
+        attachEvent("#hide-cart-button", "click", () => {
+            toggleVisibility("#reactive-cart", "none");
+            toggleVisibility("#reveal-cart", "inline");
+        });
+
+            attachEvent(".reveal-cart-button", "click", () => {
+            toggleVisibility("#reveal-cart", "none");
+            toggleVisibility("#reactive-cart", "");
+        });
+    }
+
+    private showNewProduct = (product: Product): void => {
+        let notification = `<span class="new-product-notification-content" style="color:green;">New product just added: ${product.title}</span>`;
+        this.showProduct(product);
+        removeContentFrom(".new-product-notification");
+        renderElement(".new-product-notification", 0, notification);
+        setTimeout(() => removeContentFrom(".new-product-notification"), 3000);
+    }
+
+    private showAddToCartNotification = (productId: number): void => {
+        let content = `
+            <span id="added-to-cart-notification" style="color:green;margin-top:1rem;">Added to cart</span>
+        `;
+
+        renderElement(`#${productId.toString()}`, 0, content);
+
+        setTimeout(() => {
+            document.getElementById("added-to-cart-notification").remove();
+        }, 500);
+    }
+
+    private showNotification = (notification: string): void => {
+        let content = `<span class="message-notification-content">${notification}</span>`;
+        removeContentFrom(".message-notification");
+        renderElement(".message-notification", 0, content);
     }
 }
 
 new Webshop();
 
 }
-

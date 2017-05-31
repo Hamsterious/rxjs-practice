@@ -50,6 +50,11 @@ gulp.task("copy-html", function() {
         .pipe(gulp.dest("dist"));
 });
 
+gulp.task("watch-css", function() {
+    gulp.watch("src/**/*.css", ['copy-css']);
+});
+
+
 gulp.task("copy-css", function() {
     return gulp.src(paths.css)
         .pipe(gulp.dest("dist"));
