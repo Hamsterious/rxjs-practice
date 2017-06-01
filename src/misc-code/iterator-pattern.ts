@@ -30,6 +30,7 @@ class YummyFoodBox implements IIterator {
 // Since the yummu food box implements the iterator interface, it becomes extremely simple to iterate over its content and act on it however we want.
 let yummyFoobBox: IIterator = new YummyFoodBox();
 
+// UNCOMMENT BELOW TO SEE RESULT IN LOG
 // while(yummyFoobBox.hasNext()) {
 //     console.log(yummyFoobBox.next().toUpperCase());
 // }

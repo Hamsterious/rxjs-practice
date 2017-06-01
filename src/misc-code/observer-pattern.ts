@@ -36,11 +36,7 @@ let producer = new Producer();
 let simpleLogListener = new SimpleLogListener();
 let logAsCapitalListener = new LogAsCapitalListener();
 
-// Subscribe and notify listeners
+// UNCOMMENT BELOW TO SEE RESULT IN LOG
 // producer.subscribe(simpleLogListener); 
 // producer.subscribe(logAsCapitalListener);
 // producer.notify('Hello there!');
-
-// Result:
-// simpleLogListener: Hello there!
-// logAsCapitalListener: HELLO THERE!
