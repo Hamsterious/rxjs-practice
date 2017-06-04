@@ -19,6 +19,7 @@ function getGitUsersAsJsonPromise(url: string): Promise<{}> {
 
 function renderSuggestedGithubUser(suggestedUser, selector): void {
     toggleVisibility(selector, "");
+    removeContentFrom(selector);
     
     if(suggestedUser === null) {
         toggleVisibility(selector, "none");
