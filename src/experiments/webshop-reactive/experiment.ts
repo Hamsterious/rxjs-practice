@@ -209,6 +209,8 @@ class Webshop {
                 return total + product.price;
             },0);
 
+            // HTML string template populated with above values.
+            // Hidden to minimize noise
             return `
                 <li>
                     <img src="${product.image}"
@@ -222,6 +224,8 @@ class Webshop {
                 </li>
             `;
         })
+        // Renders the HTML template.
+        // Hidden to minimize noise.
         .subscribe((x: any) => {
             let content = `<ul style="list-style: none;padding: 0;">${x}</ul>`;
             renderElement(".reactive-cart-content", 0, content);
